@@ -34,7 +34,7 @@ async fn main() -> BoxError<()> {
                 )
                 .arg(
                     Arg::with_name("verbose")
-                        .help("Sets the verbosity level")
+                        .help("Sets the verbosity level [1-3]")
                         .short("v")
                         .long("verbose")
                         .takes_value(true)
@@ -53,12 +53,12 @@ async fn main() -> BoxError<()> {
                     Arg::with_name("case_insensitive")
                         .help("Sets the process names to be treated case insensitively")
                         .short("i")
-                        .long("caseinsensitive"),
+                        .long("case-insensitive"),
                 ),
         )
         .subcommand(
             SubCommand::with_name("processes")
-                .about("Displays a list of currently running processes"),
+                .about("Display a list of currently running processes"),
         )
         .get_matches();
 

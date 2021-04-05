@@ -42,7 +42,7 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
                 .for_each(|proc| println!("{}", proc));
         }
 
-        let game_running_curr_iter = &current_processes.intersection(&game_procs).count() > &0;
+        let game_running_curr_iter = current_processes.intersection(&game_procs).count() > 0;
 
         if game_running_curr_iter != game_running_prev_iter {
             miner_proc = match miner_proc {
