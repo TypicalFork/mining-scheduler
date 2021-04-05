@@ -53,7 +53,7 @@ async fn main() -> BoxError<()> {
                     Arg::with_name("case_insensitive")
                         .help("Sets the process names to be treated case insensitively")
                         .short("i")
-                        .long("case-insensitive"),
+                        .long("caseinsensitive"),
                 ),
         )
         .subcommand(
@@ -61,8 +61,6 @@ async fn main() -> BoxError<()> {
                 .about("Displays a list of currently running processes"),
         )
         .get_matches();
-
-    // println!("{:#?}", matches);
 
     let mut system = System::new_all();
 
