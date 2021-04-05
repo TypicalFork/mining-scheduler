@@ -34,15 +34,15 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
             println!("Checking running processes.");
         }
 
-        let curr_procs = utils::get_current_processes(system, &case_insensitive);
+        let current_processes = utils::get_current_processes(system, &case_insensitive);
 
         if verbose >= 3 {
-            curr_procs
-                .into_iter()
+            current_processes
+                .iter()
                 .for_each(|proc| println!("{}", proc));
         }
 
-        let game_running_curr_iter = curr_procs.intersection(&game_procs).count() > 0;
+        let game_running_curr_iter = &current_processes.intersection(&game_procs).count() > &0;
 
         if game_running_curr_iter != game_running_prev_iter {
             miner_proc = match miner_proc {
