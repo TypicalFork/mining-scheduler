@@ -70,10 +70,14 @@ async fn main() -> BoxError<()> {
 
     let mut miner_proc: Option<tokio::process::Child> = None;
 
+    let mut game_running_prev_iter = true;
+
     loop {
         let current_procs = get_cur_procs(&mut system);
+        
+        let game_running_curr_iter = current_procs.intersection(&game_procs).count() > 0;
 
-        if current_procs.intersection(&game_procs).count() > 0 {
+        if game_running_curr_iter != game_running_prev_iter {
             miner_proc = match miner_proc {
                 Some(mut proc) => {
                     println!("Killing miner");
@@ -84,9 +88,10 @@ async fn main() -> BoxError<()> {
                     println!("Launching miner");
                     Some(process::Command::new(miner_path).spawn()?)
                 }
-            }
+            };
+            game_running_prev_iter = game_running_curr_iter;
         }
 
-        thread::sleep(time::Duration::from_secs(30));
+        thread::sleep(time::Duration::from_secs(10));
     }
 }
