@@ -40,14 +40,20 @@ async fn main() -> BoxError<()> {
                         .takes_value(true)
                         .validator(|arg| {
                             lazy_static! {
-                                static ref re: Regex = Regex::new("[1-3]").unwrap();
+                                static ref RE: Regex = Regex::new("[1-3]").unwrap();
                             }
-                            if re.is_match(&arg) {
+                            if RE.is_match(&arg) {
                                 Ok(())
                             } else {
                                 Err(String::from("Verbosity level must be between 1-3"))
                             }
                         }),
+                )
+                .arg(
+                    Arg::with_name("case_insensitive")
+                        .help("Sets the process names to be treated case insensitively")
+                        .short("i")
+                        .long("case-insensitive"),
                 ),
         )
         .subcommand(

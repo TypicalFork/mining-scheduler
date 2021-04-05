@@ -16,8 +16,12 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
         Some(v) => v.parse().unwrap(),
         None => 1,
     };
+    let case_insensitive = match matches.value_of("case_insensitive") {
+        Some(_) => true,
+        None => false,
+    };
 
-    let game_procs = match utils::parse_config(config_path) {
+    let game_procs = match utils::parse_config(config_path, &case_insensitive) {
         Ok(c) => c,
         Err(_) => {
             return Err("Error parsing config file.".into());
@@ -33,7 +37,7 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
             println!("Checking running processes.");
         }
 
-        let curr_procs = utils::get_cur_procs(system);
+        let curr_procs = utils::get_current_processes(system, &case_insensitive);
 
         if verbose >= 3 {
             println!("{:#?}", curr_procs);
