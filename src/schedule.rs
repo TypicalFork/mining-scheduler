@@ -49,11 +49,16 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
                 Some(mut proc) => {
                     println!("Killing miner");
                     proc.kill().await?;
+
                     None
                 }
                 None => {
                     println!("Launching miner");
-                    Some(process::Command::new(miner_path).spawn()?)
+
+                    Some(match process::Command::new(miner_path).spawn() {
+                        Ok(handle) => handle,
+                        Err(_) => return Err("Error launching miner".into()),
+                    })
                 }
             };
             game_running_prev_iter = game_running_curr_iter;
