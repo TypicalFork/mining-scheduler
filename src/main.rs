@@ -24,16 +24,17 @@ async fn main() -> BoxError<()> {
                     Arg::with_name("miner_path")
                         .value_name("MINER")
                         .required(true)
-                        .help("Sets the miner to run."),
+                        .help("Sets the miner to run"),
                 )
                 .arg(
                     Arg::with_name("config_path")
                         .value_name("CONFIG")
                         .required(true)
-                        .help("Sets the file containing a list of game process names."),
+                        .help("Sets the file containing a list of game process names"),
                 )
                 .arg(
-                    Arg::with_name("verbose")
+                    Arg::with_name("verbosity")
+                        .value_name("VERBOSITY")
                         .help("Sets the verbosity level [1-3]")
                         .short("v")
                         .long("verbose")
@@ -45,16 +46,35 @@ async fn main() -> BoxError<()> {
                             if RE.is_match(&arg) {
                                 Ok(())
                             } else {
-                                Err(String::from("Verbosity level must be between 1-3"))
+                                Err("Verbosity level must be between 1-3".into())
                             }
                         }),
                 )
+                .arg(
+                    Arg::with_name("sleep_time")
+                        .value_name("TIME")
+                        .help("Sets how often the scheduler checks running processes (in seconds)")
+                        .short("t")
+                        .long("sleep-time")
+                        .takes_value(true)
+                        .validator(|arg| {
+                            lazy_static! {
+                                static ref RE: Regex = Regex::new("[0-9]+").unwrap();
+                            }
+                            if RE.is_match(&arg) {
+                                Ok(())
+                            } else {
+                                Err("The sleep time can only contain digits".into())
+                            }
+                        }))
+                
                 .arg(
                     Arg::with_name("case_insensitive")
                         .help("Sets the process names to be treated case insensitively")
                         .short("i")
                         .long("case-insensitive"),
-                ),
+                )
+
         )
         .subcommand(
             SubCommand::with_name("processes")
