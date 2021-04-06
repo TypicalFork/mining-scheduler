@@ -1,5 +1,4 @@
 use clap::{App, AppSettings, Arg, SubCommand};
-use lazy_static::lazy_static;
 use regex::Regex;
 use sysinfo::{System, SystemExt};
 
@@ -40,10 +39,8 @@ async fn main() -> BoxError<()> {
                         .long("verbose")
                         .takes_value(true)
                         .validator(|arg| {
-                            lazy_static! {
-                                static ref RE: Regex = Regex::new("[1-3]").unwrap();
-                            }
-                            if RE.is_match(&arg) {
+                            let re = Regex::new("[1-3]").unwrap();
+                            if re.is_match(&arg) {
                                 Ok(())
                             } else {
                                 Err("Verbosity level must be between 1-3".into())
@@ -58,23 +55,20 @@ async fn main() -> BoxError<()> {
                         .long("sleep-time")
                         .takes_value(true)
                         .validator(|arg| {
-                            lazy_static! {
-                                static ref RE: Regex = Regex::new("[0-9]+").unwrap();
-                            }
-                            if RE.is_match(&arg) {
+                            let re = Regex::new("[0-9]+").unwrap();
+                            if re.is_match(&arg) {
                                 Ok(())
                             } else {
                                 Err("The sleep time can only contain digits".into())
                             }
-                        }))
-                
+                        }),
+                )
                 .arg(
                     Arg::with_name("case_insensitive")
                         .help("Sets the process names to be treated case insensitively")
                         .short("i")
                         .long("case-insensitive"),
-                )
-
+                ),
         )
         .subcommand(
             SubCommand::with_name("processes")

@@ -16,13 +16,13 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
         Some(v) => v.parse().unwrap(),
         None => 1,
     };
-    let sleep_time= match matches.value_of("sleep_time") {
+    let sleep_time = match matches.value_of("sleep_time") {
         // The argument is guaranteed to be a digit due to a check earlier; if it causes an error,
         // it's because of an overflow.
         Some(t) => match t.parse::<u64>() {
             Ok(i) => time::Duration::from_secs(i),
-            Err(_) => return Err("Time value too large.".into())
-        }
+            Err(_) => return Err("Sleep time value is too large.".into()),
+        },
         None => time::Duration::from_secs(10),
     };
     let case_insensitive = matches.is_present("case_insensitive");
