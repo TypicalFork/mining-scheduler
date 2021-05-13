@@ -10,8 +10,7 @@ use schedule::schedule;
 
 type BoxError<T> = Result<T, Box<dyn std::error::Error>>;
 
-#[tokio::main()]
-async fn main() -> BoxError<()> {
+fn main() -> BoxError<()> {
     let matches = App::new("Mining Scheduler")
         .version("0.1")
         .author("Klim T. <klimusha@gmail.com>")
@@ -79,8 +78,8 @@ async fn main() -> BoxError<()> {
     let mut system = System::new_all();
 
     match matches.subcommand() {
-        ("schedule", Some(sub_matches)) => schedule(&mut system, sub_matches).await?,
-        ("processes", Some(sub_matches)) => processes(&mut system, sub_matches).await?,
+        ("schedule", Some(sub_matches)) => schedule(&mut system, sub_matches)?,
+        ("processes", Some(sub_matches)) => processes(&mut system, sub_matches)?,
         // There will always be a subcommand as they are required.
         _ => {}
     }

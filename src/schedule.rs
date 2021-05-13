@@ -1,13 +1,12 @@
-use std::{thread, time};
+use std::{process, thread, time};
 
 use clap::ArgMatches;
 use sysinfo::System;
-use tokio::process;
 
 use crate::utils;
 use crate::BoxError;
 
-pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError<()> {
+pub fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError<()> {
     // MINER and CONFIG are required, so clap ensures that it is specified.
     let miner_path = matches.value_of("miner_path").unwrap();
     let config_path = matches.value_of("config_path").unwrap();
@@ -34,7 +33,7 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
         }
     };
 
-    let mut miner_proc: Option<tokio::process::Child> = None;
+    let mut miner_proc: Option<process::Child> = None;
 
     let mut game_running_prev_iter = true;
 
@@ -57,7 +56,7 @@ pub async fn schedule(system: &mut System, matches: &ArgMatches<'_>) -> BoxError
             miner_proc = match miner_proc {
                 Some(mut proc) => {
                     println!("Killing miner");
-                    proc.kill().await?;
+                    proc.kill()?;
 
                     None
                 }
